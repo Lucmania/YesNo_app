@@ -51,10 +51,6 @@ function App() {
         
         {answer && <AnswerDisplay answer={answer} />}
       </main>
-      
-      <footer className="App-footer">
-        <p>Powered by <a href="https://yesno.wtf" target="_blank" rel="noopener noreferrer">yesno.wtf</a></p>
-      </footer>
     </div>
   );
 }
