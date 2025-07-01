@@ -2,10 +2,24 @@ import React, { useState } from 'react';
 import './QuestionForm.css';
 
 function isValidQuestion(question) {
-  // Valida si la pregunta está entre signos de interrogación o termina con ?
   const trimmed = question.trim();
+  
+  if (!trimmed) return false;
+  
+  let content = trimmed;
+  
+  if (/^¿.+\?$/.test(trimmed)) {
+    content = trimmed.slice(1, -1);
+  }
+  else if (/\?$/.test(trimmed)) {
+    content = trimmed.slice(0, -1);
+  }
+  
+  const realContent = content.trim();
+  
   return (
-    /^¿.+\?$/.test(trimmed) || /\?$/.test(trimmed)
+    (/^¿.+\?$/.test(trimmed) || /\?$/.test(trimmed)) && 
+    realContent.length > 0
   );
 }
 
@@ -20,10 +34,25 @@ const QuestionForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    const trimmed = question.trim();
+    
+    if (!trimmed) {
+      setError('Por favor escribe una pregunta');
+      return;
+    }
+    
+    const withoutQuestionMarks = trimmed.replace(/[¿?]/g, '').trim();
+    if (!withoutQuestionMarks) {
+      setError('La pregunta debe contener texto, no solo signos de interrogación');
+      return;
+    }
+    
     if (!isValidQuestion(question)) {
       setError('La pregunta debe estar entre signos de interrogación (¿...?) o terminar con un signo de pregunta (?)');
       return;
     }
+    
     onSubmit(question);
     setQuestion('');
   };
@@ -44,4 +73,4 @@ const QuestionForm = ({ onSubmit }) => {
   );
 };
 
-export default QuestionForm; 
+export default QuestionForm;
